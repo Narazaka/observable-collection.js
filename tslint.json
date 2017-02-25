@@ -1,0 +1,14 @@
+{
+    "extends": [
+        "tslint:recommended"
+    ],
+    "rules": {
+        "member-access": [
+            false
+        ],
+        "curly": false,
+        "only-arrow-functions": [
+            false
+        ]
+    }
+}

@@ -1,0 +1,36 @@
+{
+  "name": "observable-collection",
+  "version": "1.0.0",
+  "description": "ObserbableCollection like classes for RxJS",
+  "keywords": [
+    "observablecollection",
+    "observable-collection",
+    "reactiveproperty",
+    "rxjs"
+  ],
+  "main": "./dist/es2015/index.js",
+  "types": "./dist/es2015/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dist": "rm -rf dist && tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "tslint *.ts src/**/*.ts test/**/*.ts",
+    "prepublish": "npm run dist"
+  },
+  "author": "Narazaka",
+  "license": "MIT",
+  "url": "https://github.com/Narazaka/observable-collection.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Narazaka/observable-collection.js.git"
+  },
+  "dependencies": {
+    "rxjs": "^5.0.0"
+  },
+  "devDependencies": {
+    "tslint": "^4.4.2",
+    "typescript": "^2.2.1"
+  }
+}
