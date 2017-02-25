@@ -23,6 +23,10 @@ array.push(4);
 
 ```
 
+## See also
+
+- [reactiveproperty](https://github.com/Narazaka/reactiveproperty.js)
+
 ## License
 
 This is released under [MIT License](http://narazaka.net/license/MIT?2017).
