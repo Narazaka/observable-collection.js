@@ -5,20 +5,22 @@ import {toSubscriber} from "rxjs/util/toSubscriber";
 
 import {IObservableCollection} from "./IObservableCollection";
 
-export class ObservableArray<T> extends Array<T> implements IObservableCollection<T[]> {
-    static from<T>(array: T[]) {
-        return new ObservableArray(...array);
+export class ObservableSet<T> extends Set<T> implements IObservableCollection<Set<T>> {
+    static from<T>(entries?: T[]): ObservableSet<T>;
+    static from<T>(iterable: Iterable<T>): ObservableSet<T>;
+    static from<T>(iterable?: Iterable<T>) {
+        return new ObservableSet(<any> iterable);
     }
 
     closed = false;
 
-    private source = new Subject<T[]>();
+    private source = new Subject<Set<T>>();
 
     subscribe(): Subscription;
-    subscribe(observer: PartialObserver<T[]>): Subscription;
-    subscribe(next?: (value: T[]) => void, error?: (error: any) => void, complete?: () => void): Subscription;
+    subscribe(observer: PartialObserver<Set<T>>): Subscription;
+    subscribe(next?: (value: Set<T>) => void, error?: (error: any) => void, complete?: () => void): Subscription;
     subscribe(
-        observerOrNext?: PartialObserver<T[]> | ((value: T[]) => void),
+        observerOrNext?: PartialObserver<Set<T>> | ((value: Set<T>) => void),
         error?: (error: any) => void,
         complete?: () => void,
     ) {
@@ -35,20 +37,14 @@ export class ObservableArray<T> extends Array<T> implements IObservableCollectio
 }
 
 const mutableMethods = [
-    "copyWithin",
-    "fill",
-    "pop",
-    "push",
-    "reverse",
-    "shift",
-    "sort",
-    "splice",
-    "unshift",
+    "add",
+    "clear",
+    "delete",
 ];
 
 for (const mutableMethod of mutableMethods) {
-    ObservableArray.prototype[<any> mutableMethod] = function (...args: any[]) {
-        Array.prototype[<any> mutableMethod].apply(this, args);
+    (<any> ObservableSet).prototype[<any> mutableMethod] = function (...args: any[]) {
+        (<any> Set).prototype[<any> mutableMethod].apply(this, args);
         this.source.next(this);
     };
 };

@@ -1,6 +1,10 @@
 # [observable-collection.js - ObserbableCollection like classes for RxJS](https://github.com/Narazaka/observable-collection.js)
 
-`ObservableArray<T>` etc.
+- `ObservableArray<T>`
+- `ObservableMap<K, V>`
+- `ObservableWeakMap<K, V>`
+- `ObservableSet<T>`
+- `ObservableWeakSet<T>`
 
 ## Synopsys
 
