@@ -14,6 +14,8 @@ export class ObservableWeakMap<K extends Object, V>
     }
 
     closed = false;
+    emit = true;
+    private changed = false;
 
     private source = new Subject<WeakMap<K, V>>();
 
@@ -35,6 +37,13 @@ export class ObservableWeakMap<K extends Object, V>
         this.source.complete();
         this.source.unsubscribe();
     }
+
+    atomic(routine: Function) {
+        this.emit = false;
+        routine();
+        this.emit = true;
+        if (this.changed) this.source.next(<any> this);
+    }
 }
 
 const mutableMethods = [
@@ -45,6 +54,6 @@ const mutableMethods = [
 for (const mutableMethod of mutableMethods) {
     (<any> ObservableWeakMap).prototype[<any> mutableMethod] = function (...args: any[]) {
         (<any> WeakMap).prototype[<any> mutableMethod].apply(this, args);
-        this.source.next(this);
+        if (this.emit) this.source.next(this);
     };
 };

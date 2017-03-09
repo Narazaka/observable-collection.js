@@ -11,6 +11,8 @@ export class ObservableArray<T> extends Array<T> implements IObservableCollectio
     }
 
     closed = false;
+    emit = true;
+    private changed = false;
 
     private source = new Subject<T[]>();
 
@@ -32,6 +34,13 @@ export class ObservableArray<T> extends Array<T> implements IObservableCollectio
         this.source.complete();
         this.source.unsubscribe();
     }
+
+    atomic(routine: Function) {
+        this.emit = false;
+        routine();
+        this.emit = true;
+        if (this.changed) this.source.next(<any> this);
+    }
 }
 
 const mutableMethods = [
@@ -49,6 +58,6 @@ const mutableMethods = [
 for (const mutableMethod of mutableMethods) {
     ObservableArray.prototype[<any> mutableMethod] = function (...args: any[]) {
         Array.prototype[<any> mutableMethod].apply(this, args);
-        this.source.next(this);
+        if (this.emit) this.source.next(this);
     };
 };
