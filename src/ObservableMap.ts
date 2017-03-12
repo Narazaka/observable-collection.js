@@ -1,6 +1,6 @@
 import {Subject} from "rxjs";
 import {PartialObserver} from "rxjs/Observer";
-import {Subscription} from "rxjs/subscription";
+import {Subscription} from "rxjs/Subscription";
 import {toSubscriber} from "rxjs/util/toSubscriber";
 
 import {IObservableCollection} from "./IObservableCollection";
