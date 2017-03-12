@@ -14,7 +14,8 @@ export class ObservableWeakMap<K extends Object, V>
     }
 
     closed = false;
-    emit = true;
+    get emit() { return this.preventEmitCount === 0; }
+    private preventEmitCount = 0;
     private changed = false;
 
     private source = new Subject<WeakMap<K, V>>();
@@ -39,10 +40,13 @@ export class ObservableWeakMap<K extends Object, V>
     }
 
     atomic(routine: Function) {
-        this.emit = false;
+        this.preventEmitCount++;
         routine();
-        this.emit = true;
-        if (this.changed) this.source.next(<any> this);
+        this.preventEmitCount--;
+        if (this.changed && this.emit) {
+            this.source.next(<any> this);
+            this.changed = false;
+        }
     }
 }
 
@@ -54,6 +58,10 @@ const mutableMethods = [
 for (const mutableMethod of mutableMethods) {
     (<any> ObservableWeakMap).prototype[<any> mutableMethod] = function (...args: any[]) {
         (<any> WeakMap).prototype[<any> mutableMethod].apply(this, args);
-        if (this.emit) this.source.next(this);
+        if (this.emit) {
+            this.source.next(this);
+        } else {
+            this.changed = true;
+        }
     };
 };

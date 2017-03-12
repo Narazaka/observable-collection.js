@@ -13,7 +13,8 @@ export class ObservableMap<K, V> extends Map<K, V> implements IObservableCollect
     }
 
     closed = false;
-    emit = true;
+    get emit() { return this.preventEmitCount === 0; }
+    private preventEmitCount = 0;
     private changed = false;
 
     private source = new Subject<Map<K, V>>();
@@ -38,10 +39,13 @@ export class ObservableMap<K, V> extends Map<K, V> implements IObservableCollect
     }
 
     atomic(routine: Function) {
-        this.emit = false;
+        this.preventEmitCount++;
         routine();
-        this.emit = true;
-        if (this.changed) this.source.next(<any> this);
+        this.preventEmitCount--;
+        if (this.changed && this.emit) {
+            this.source.next(<any> this);
+            this.changed = false;
+        }
     }
 }
 
@@ -54,6 +58,10 @@ const mutableMethods = [
 for (const mutableMethod of mutableMethods) {
     (<any> ObservableMap).prototype[<any> mutableMethod] = function (...args: any[]) {
         (<any> Map).prototype[<any> mutableMethod].apply(this, args);
-        if (this.emit) this.source.next(this);
+        if (this.emit) {
+            this.source.next(this);
+        } else {
+            this.changed = true;
+        }
     };
 };
