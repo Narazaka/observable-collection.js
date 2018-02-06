@@ -1,6 +1,6 @@
 {
   "name": "observable-collection",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "ObserbableCollection like classes for RxJS",
   "keywords": [
     "observablecollection",
