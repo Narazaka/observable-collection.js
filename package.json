@@ -16,7 +16,7 @@
   "scripts": {
     "dist": "rm -rf dist && tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "tslint *.ts src/**/*.ts test/**/*.ts",
+    "lint": "tslint -p .",
     "prepublish": "npm run dist"
   },
   "author": "Narazaka",

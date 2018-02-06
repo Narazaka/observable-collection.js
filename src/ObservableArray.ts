@@ -36,12 +36,12 @@ export class ObservableArray<T> extends Array<T> implements IObservableCollectio
         this.source.unsubscribe();
     }
 
-    atomic(routine: Function) {
+    atomic(routine: () => void) {
         this.preventEmitCount++;
         routine();
         this.preventEmitCount--;
         if (this.changed && this.emit) {
-            this.source.next(<any> this);
+            this.source.next(this as any);
             this.changed = false;
         }
     }
@@ -60,12 +60,12 @@ const mutableMethods = [
 ];
 
 for (const mutableMethod of mutableMethods) {
-    ObservableArray.prototype[<any> mutableMethod] = function (...args: any[]) {
-        Array.prototype[<any> mutableMethod].apply(this, args);
+    ObservableArray.prototype[mutableMethod as any] = function(...args: any[]) {
+        Array.prototype[mutableMethod as any].apply(this, args);
         if (this.emit) {
             this.source.next(this);
         } else {
             this.changed = true;
         }
     };
-};
+}

@@ -9,7 +9,7 @@ export class ObservableSet<T> extends Set<T> implements IObservableCollection<Se
     static from<T>(entries?: T[]): ObservableSet<T>;
     static from<T>(iterable: Iterable<T>): ObservableSet<T>;
     static from<T>(iterable?: Iterable<T>) {
-        return new ObservableSet(<any> iterable);
+        return new ObservableSet(iterable as any);
     }
 
     closed = false;
@@ -38,12 +38,12 @@ export class ObservableSet<T> extends Set<T> implements IObservableCollection<Se
         this.source.unsubscribe();
     }
 
-    atomic(routine: Function) {
+    atomic(routine: () => void) {
         this.preventEmitCount++;
         routine();
         this.preventEmitCount--;
         if (this.changed && this.emit) {
-            this.source.next(<any> this);
+            this.source.next(this as any);
             this.changed = false;
         }
     }
@@ -56,12 +56,12 @@ const mutableMethods = [
 ];
 
 for (const mutableMethod of mutableMethods) {
-    (<any> ObservableSet).prototype[<any> mutableMethod] = function (...args: any[]) {
-        (<any> Set).prototype[<any> mutableMethod].apply(this, args);
+    (ObservableSet as any).prototype[mutableMethod as any] = function(...args: any[]) {
+        (Set as any).prototype[mutableMethod as any].apply(this, args);
         if (this.emit) {
             this.source.next(this);
         } else {
             this.changed = true;
         }
     };
-};
+}

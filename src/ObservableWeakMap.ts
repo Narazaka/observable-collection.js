@@ -5,12 +5,12 @@ import {toSubscriber} from "rxjs/util/toSubscriber";
 
 import {IObservableCollection} from "./IObservableCollection";
 
-export class ObservableWeakMap<K extends Object, V>
+export class ObservableWeakMap<K extends object, V>
     extends WeakMap<K, V> implements IObservableCollection<WeakMap<K, V>> {
     static from<K, V>(entries?: Array<[K, V]>): ObservableWeakMap<K, V>;
     static from<K, V>(iterable: Iterable<[K, V]>): ObservableWeakMap<K, V>;
     static from<K, V>(iterable?: Iterable<[K, V]>) {
-        return new ObservableWeakMap(<any> iterable);
+        return new ObservableWeakMap(iterable as any);
     }
 
     closed = false;
@@ -39,12 +39,12 @@ export class ObservableWeakMap<K extends Object, V>
         this.source.unsubscribe();
     }
 
-    atomic(routine: Function) {
+    atomic(routine: () => void) {
         this.preventEmitCount++;
         routine();
         this.preventEmitCount--;
         if (this.changed && this.emit) {
-            this.source.next(<any> this);
+            this.source.next(this as any);
             this.changed = false;
         }
     }
@@ -56,12 +56,12 @@ const mutableMethods = [
 ];
 
 for (const mutableMethod of mutableMethods) {
-    (<any> ObservableWeakMap).prototype[<any> mutableMethod] = function (...args: any[]) {
-        (<any> WeakMap).prototype[<any> mutableMethod].apply(this, args);
+    (ObservableWeakMap as any).prototype[mutableMethod as any] = function(...args: any[]) {
+        (WeakMap as any).prototype[mutableMethod as any].apply(this, args);
         if (this.emit) {
             this.source.next(this);
         } else {
             this.changed = true;
         }
     };
-};
+}
