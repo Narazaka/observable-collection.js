@@ -7,9 +7,9 @@ import {IObservableCollection} from "./IObservableCollection";
 
 export class ObservableWeakMap<K extends object, V>
     extends WeakMap<K, V> implements IObservableCollection<WeakMap<K, V>> {
-    static from<K, V>(entries?: Array<[K, V]>): ObservableWeakMap<K, V>;
-    static from<K, V>(iterable: Iterable<[K, V]>): ObservableWeakMap<K, V>;
-    static from<K, V>(iterable?: Iterable<[K, V]>) {
+    static from<K extends object, V>(entries?: Array<[K, V]>): ObservableWeakMap<K, V>;
+    static from<K extends object, V>(iterable: Iterable<[K, V]>): ObservableWeakMap<K, V>;
+    static from<K extends object, V>(iterable?: Iterable<[K, V]>) {
         return new ObservableWeakMap(iterable as any);
     }
 
