@@ -5,10 +5,10 @@ import {toSubscriber} from "rxjs/util/toSubscriber";
 
 import {IObservableCollection} from "./IObservableCollection";
 
-export class ObservableWeakSet<T> extends WeakSet<T> implements IObservableCollection<WeakSet<T>> {
-    static from<T>(entries?: T[]): ObservableWeakSet<T>;
-    static from<T>(iterable: Iterable<T>): ObservableWeakSet<T>;
-    static from<T>(iterable?: Iterable<T>) {
+export class ObservableWeakSet<T extends object> extends WeakSet<T> implements IObservableCollection<WeakSet<T>> {
+    static from<T extends object>(entries?: T[]): ObservableWeakSet<T>;
+    static from<T extends object>(iterable: Iterable<T>): ObservableWeakSet<T>;
+    static from<T extends object>(iterable?: Iterable<T>) {
         return new ObservableWeakSet(<any> iterable);
     }
 
