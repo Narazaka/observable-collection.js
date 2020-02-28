@@ -27,7 +27,7 @@
     "url": "https://github.com/Narazaka/observable-collection.js.git"
   },
   "dependencies": {
-    "rxjs": "^5.0.0"
+    "rxjs": "^6.5.4"
   },
   "devDependencies": {
     "tslint": "^5.9.1",
